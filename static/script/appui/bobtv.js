@@ -22,7 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def('sampleapp/appui/sampleapp',
+require.def('bobtv/appui/bobtv',
     [
         'antie/application',
         'antie/widgets/container'
@@ -33,7 +33,6 @@ require.def('sampleapp/appui/sampleapp',
             init: function(appDiv, styleDir, imgDir, callback) {
                 var self;
                 self = this;
-                
                 self._super(appDiv, styleDir, imgDir, callback);
 
                 // Sets the root widget of the application to be
@@ -49,7 +48,7 @@ require.def('sampleapp/appui/sampleapp',
                 // Called from run() as we need the framework to be ready beforehand.
                 this._setRootContainer();
                 // Create maincontainer and add simple component to it
-                this.addComponentContainer("maincontainer", "sampleapp/appui/components/simple");
+                this.addComponentContainer("maincontainer", "bobtv/appui/components/ldp");
             }
         });
     }

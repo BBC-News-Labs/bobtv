@@ -22,7 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def("sampleapp/appui/datasources/simplefeed",
+require.def("bobtv/appui/datasources/simplefeed",
     [
         "antie/class"
     ],
@@ -36,7 +36,7 @@ require.def("sampleapp/appui/datasources/simplefeed",
                     [
                         {
                             "id":"1",
-                            "title":"Apple",
+                            "title":"Apple1",
                             "img" : "static/img/fruit/apple.png"
                         },
                         {

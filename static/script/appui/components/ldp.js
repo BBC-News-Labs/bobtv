@@ -1,4 +1,28 @@
-require.def("bobtv/appui/components/simple",
+/**
+ * @preserve Copyright (c) 2013 British Broadcasting Corporation
+ * (http://www.bbc.co.uk) and TAL Contributors (1)
+ *
+ * (1) TAL Contributors are listed in the AUTHORS file and at
+ *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
+ *     not this notice.
+ *
+ * @license Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * All rights reserved
+ * Please contact us for an alternative licence
+ */
+
+require.def("bobtv/appui/components/ldp",
     [
         "antie/widgets/component",
         "antie/widgets/button",
@@ -7,55 +31,35 @@ require.def("bobtv/appui/components/simple",
         "antie/widgets/carousel",
         "antie/datasource",
         "bobtv/appui/formatters/simpleformatter",
-        "bobtv/appui/datasources/simplefeed"
+        "bobtv/appui/datasources/simplefeed",
+        "bobtv/appui/formatters/ldpformatter",
+        "bobtv/appui/datasources/ldpfeed"
     ],
-    function (Component, Button, Label, VerticalList, Carousel, DataSource, SimpleFormatter, SimpleFeed) {
+    function (Component, Button, Label, VerticalList, Carousel, DataSource, SimpleFormatter, SimpleFeed, LdpFormatter, LdpFeed) {
         
         // All components extend Component
         return Component.extend({
             init: function () {
                 var self, helloWorldLabel, welcomeLabel, carouselButtonLabel, verticalListMenu;
-
                 self = this;
                 // It is important to call the constructor of the superclass
-                this._super("simplecomponent");
+                this._super("component");
 
                 // Add the labels to the component
-                helloWorldLabel = new Label("helloWorldLabel", "Hello World");
+                helloWorldLabel = new Label("helloWorldLabel", "BobTV");
                 this.appendChildWidget(helloWorldLabel);
 
-                welcomeLabel = new Label("welcomeLabel", "Welcome to your first TAL application!");
+                welcomeLabel = new Label("welcomeLabel", "Latest trending BBC News");
                 this.appendChildWidget(welcomeLabel);
-
-                // Create the buttons and add select event listeners
-                var carouselButton = new Button();
-                carouselButton.addEventListener("select", function(evt){
-                    self.getCurrentApplication().pushComponent("maincontainer", "bobtv/appui/components/simplecarouselcomponent");
-                });
-                carouselButtonLabel = new Label("Simple Horizontal Carousel Example (deprecated)");
-                carouselButton.appendChildWidget(carouselButtonLabel);
 
                 var newCarouselButton = this._createCarouselButton();
 
-                var playerButton = new Button();
-                playerButton.addEventListener("select", function(evt){
-                    self.getCurrentApplication().pushComponent("maincontainer", "bobtv/appui/components/simplevideocomponent");
-                });
-                playerButton.appendChildWidget(new Label("Simple Video Player Example"));
-
-                var horizontalProgressButton = new Button();
-                horizontalProgressButton.appendChildWidget(new Label("Horizontal Progress Bar Example"));
-                horizontalProgressButton.addEventListener("select", function(evt) {
-                    self.getCurrentApplication().pushComponent("maincontainer", "bobtv/appui/components/horizontalprogresscomponent");
-                });
-
+                var ldpTrendingButton = this._createCarouselButtonLdp();
 
                 // Create a vertical list and append the buttons to navigate within the list
                 verticalListMenu = new VerticalList("mainMenuList");
                 verticalListMenu.appendChildWidget(newCarouselButton);
-                verticalListMenu.appendChildWidget(carouselButton);
-                verticalListMenu.appendChildWidget(playerButton);
-                verticalListMenu.appendChildWidget(horizontalProgressButton);
+                verticalListMenu.appendChildWidget(ldpTrendingButton);
                 this.appendChildWidget(verticalListMenu);
 
                 // Add a 'beforerender' event listener to the component to do anything specific that might need to be done
@@ -68,13 +72,14 @@ require.def("bobtv/appui/components/simple",
                 // the callback removes itself once it's fired to avoid multiple calls.
                 this.addEventListener("aftershow", function appReady(evt) {
                     self.getCurrentApplication().ready();
-                    self.removeEventListener('aftershow', appReady);
                 });
+
             },
 
             _createCarouselButton: function () {
                 var self = this;
                 function carouselExampleSelected() {
+                    
                     self.getCurrentApplication().pushComponent(
                         "maincontainer",
                         "bobtv/appui/components/carouselcomponent",
@@ -102,11 +107,49 @@ require.def("bobtv/appui/components/simple",
                         normalisedAlignPoint: 0.5,
                         normalisedWidgetAlignPoint: 0.5
                     },
-                    initialItem: 4,
+                    initialItem: 0,
                     type: "CULLING",
                     lengths: 264
                 };
             },
+
+            _getCarouselConfigLdp: function () {
+                return {
+                    description: "UP and DOWN to navigate, SELECT to see videos on topic, BACK to return",
+                    dataSource: new DataSource(null, new LdpFeed(), 'loadTrendingData'),
+                    formatter: new LdpFormatter(),
+                    orientation: Carousel.orientations.VERTICAL,
+                    carouselId: 'verticalCullingCarousel2',
+                    animOptions: {
+                        skipAnim: false
+                    },
+                    alignment: {
+                        normalisedAlignPoint: 0.5,
+                        normalisedWidgetAlignPoint: 0.5
+                    },
+                    initialItem: 0,
+                    type: "CULLING",
+                    lengths: 264
+                };
+            },
+
+            _createCarouselButtonLdp: function () {
+                var self = this;
+                function carouselExampleSelectedLdp() {
+                    self.getCurrentApplication().pushComponent(
+                        "maincontainer",
+                        "bobtv/appui/components/ldpcarouselcomponent",
+                        self._getCarouselConfigLdp()
+                    );
+                }
+
+                var button = new Button('carouselButtonLdp');
+                button.appendChildWidget(new Label("Ldp Carousel Example"));
+                button.addEventListener('select', carouselExampleSelectedLdp);
+                return button;
+            },
+
+
 
             // Appending widgets on beforerender ensures they're still displayed
             // if the component is hidden and subsequently reinstated.

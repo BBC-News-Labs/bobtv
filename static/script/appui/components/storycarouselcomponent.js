@@ -1,4 +1,4 @@
-require.def("bobtv/appui/components/carouselcomponent",
+require.def("bobtv/appui/components/storycarouselcomponent",
     [
         "antie/widgets/component",
         "antie/datasource",
@@ -34,13 +34,16 @@ require.def("bobtv/appui/components/carouselcomponent",
         var CarouselComponent;
         CarouselComponent = Component.extend({
             init: function () {
-                this._super('carouselComponent');
+            	this._super('carouselComponent');
                 this._addComponentListeners();
                 this._description = new Label();
                 this._description.addClass('description');
                 this.appendChildWidget(this._description);
             },
 
+            back: function () {
+                console.log("in story back");
+            },
             onBeforeShow: function (evt) {
                 this._initialItem = evt.args.initialItem || 0;
                 this._dontShowYet(evt);
@@ -60,16 +63,33 @@ require.def("bobtv/appui/components/carouselcomponent",
             },
 
             onSelect: function (evt) {
-                this._goBack();
+                //console.log(evt.target._childWidgetOrder[0].outputElement.nextElementSibling.childNodes[0].data);
+                //var config = this._getCarouselConfigStory(evt.target._childWidgetOrder[0].id, title);
+                //console.log(config);
+                //this._createCarousel(evt);
+                //this._super('carouselComponentSub');
+                
+                //console.log('parent data item? ', evt.target.parentWidget);
+                //console.log(evt.target.getDataItem());
+                console.log(this.getCurrentApplication().getFocussedWidget());
+                this.getCurrentApplication().pushComponent(
+                        "maincontainer",
+                        "bobtv/appui/components/videoplayercomponent",
+                        evt.target.getDataItem()
+                    );
+                this.hide();
+                
             },
 
             onDataBound: function (evt) {
+            	
                 // In practice you might set widget lengths from data source rather then component args
                 // and do it during a bind per widget (on append), however if you're doing it in a block
                 // this is where it needs to happen (post bind, pre align)
                 if (this._lengths) {
                     this._carousel.setWidgetLengths(this._lengths);
                 }
+                //this.data("{test: 'object'}");
                 // tell wrapping strips to generate clones now binding is finished
                 this._carousel.recalculate();
                 // could set initial/aligned item from data source
@@ -79,6 +99,11 @@ require.def("bobtv/appui/components/carouselcomponent",
 
             setDescription: function (titleText) {
                 this._description.setText(titleText);
+            },
+
+            getCurrentState: function() {
+                console.log("I CALLED GET CURRENT STATE IN STORY CAROUSEL");
+                return this.getCurrentApplication().getFocussedWidget();
             },
 
             _addComponentListeners: function () {
@@ -188,7 +213,6 @@ require.def("bobtv/appui/components/carouselcomponent",
             },
 
             _goBack: function () {
-                console.log(this.parentWidget);
                 this.parentWidget.back();
             },
 
@@ -218,7 +242,8 @@ require.def("bobtv/appui/components/carouselcomponent",
 
             _removeListenersFrom: function (target, listenerMap) {
                 this._modifyListenersOn(target, listenerMap, false);
-            }
+            },
+
         });
 
         return CarouselComponent;

@@ -22,7 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def("bobtv/appui/components/simplecarouselcomponent",
+require.def("bobtv/appui/components/ldpsearchcomponent",
     [
         "antie/widgets/component",
         "antie/datasource",
@@ -36,10 +36,11 @@ require.def("bobtv/appui/components/simplecarouselcomponent",
         // All components extend Component
         return Component.extend({
             init: function () {
+                console.log('This is a test!!');
                 var self = this;
 
                 // It is important to call the constructor of the superclass
-                this._super("simplecarouselcomponent");
+                this._super("ldpsearchcomponent");
 
                 // Create a a label add a class to it, this class can be used as a CSS selector
                 var description = new Label("Press LEFT and RIGHT to navigate, SELECT returns to main menu.");
@@ -63,7 +64,7 @@ require.def("bobtv/appui/components/simplecarouselcomponent",
 
                 // Add a select event listener to the carousel that pops back to the previous component on the component stack
                 this._carousel.addEventListener("select", function(evt){
-                    self.parentWidget.back();
+//                    self.parentWidget.back();
                 });
             },
 

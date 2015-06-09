@@ -22,7 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def("bobtv/appui/formatters/simpleformatter",
+require.def("bobtv/appui/formatters/storyformatter",
     [
         "antie/formatter",
         "antie/widgets/label",
@@ -32,12 +32,31 @@ require.def("bobtv/appui/formatters/simpleformatter",
     function(Formatter, Label, Button, Image) {
         return Formatter.extend({
             format : function (iterator) {
+                //alert('in formatter', iterator);
+                // for (var i = 0; i < iterator.length; i++) {
+                //     iterator[i]
+                // };
+                
+
                 var button, item;
                 item = iterator.next();
-                button = new Button("fruit" + item.id);
-                button.appendChildWidget(new Image("img-item.id", item.img, { width : 200, height: 200}));
+                button = new Button(item.title);
+                //console.log(JSON.stringify(item.label.toString()));
+                button.appendChildWidget(new Image(item["@id"], item.imageSrc, { height: 200}));
                 button.appendChildWidget(new Label(item.title));
+                button.appendChildWidget(new Label(item.summary));
+                //button.appendChildWidget(new Label(item.mp4));
+                button.setDataItem('{"title": "'+escape(item.title)+'", "src": "'+escape(item.mp4)+'"}');
+
+                //button.setDataItem(item["@id"]);
                 return button;
+
+                // var button, item;
+                // item = iterator.next();
+                // button = new Button("fruit" + item.id);
+                // button.appendChildWidget(new Image("img-item.id", item.img, { width : 200, height: 200}));
+                // button.appendChildWidget(new Label(item.title));
+                // return button;
             }
         });
     }

@@ -18,20 +18,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * All rights reserved
+ * All rights reser!!!ved
  * Please contact us for an alternative licence
  */
 
-require.def("bobtv/appui/components/simplecarouselcomponent",
+require.def("bobtv/appui/components/ldptrendingcomponent",
     [
         "antie/widgets/component",
         "antie/datasource",
         "antie/widgets/horizontalcarousel",
-        "bobtv/appui/formatters/simpleformatter",
-        "bobtv/appui/datasources/simplefeed",
+        "bobtv/appui/formatters/ldpformatter",
+        "bobtv/appui/datasources/ldpfeed",
         "antie/widgets/label"
     ],
-    function (Component, DataSource, HorizontalCarousel, SimpleFormatter, SimpleFeed, Label) {
+    function (Component, DataSource, HorizontalCarousel, LdpFormatter, LdpFeed, Label) {
 
         // All components extend Component
         return Component.extend({
@@ -42,17 +42,17 @@ require.def("bobtv/appui/components/simplecarouselcomponent",
                 this._super("simplecarouselcomponent");
 
                 // Create a a label add a class to it, this class can be used as a CSS selector
-                var description = new Label("Press LEFT and RIGHT to navigate, SELECT returns to main menu.");
+                var description = new Label("Press LEFT and RIGHT to navigate, SELECT returns to main menu.!");
                 description.addClass("description");
                 this.appendChildWidget(description);
 
                 // Create a simple formatter and data feed that will be used to populate the carousel
-                var simpleFormatter = new SimpleFormatter();
-                var sampleFeed = new SimpleFeed()
-                this._dataSource = new DataSource(this, sampleFeed, "loadData");
+                var ldpFormatter = new LdpFormatter();
+                var ldpFeed = new LdpFeed()
+                this._dataSource = new DataSource(this, ldpFeed, "loadData");
 
                 // Create a new carousel and append it to the component
-                this._carousel = new HorizontalCarousel("simplecarousel", simpleFormatter);
+                this._carousel = new HorizontalCarousel("simplecarousel", ldpFormatter);
                 this.appendChildWidget(this._carousel);
 
                 // Add a 'beforerender' event listener to the component to ensure the data is rebinded to the
@@ -61,7 +61,11 @@ require.def("bobtv/appui/components/simplecarouselcomponent",
                     self._onBeforeRender(evt);
                 });
 
-                // Add a select event listener to the carousel that pops back to the previous component on the component stack
+                this.addEventListener("databound", function (evt) {
+                    self._databound(evt);
+                });
+
+                //Add a select event listener to the carousel that pops back to the previous component on the component stack
                 this._carousel.addEventListener("select", function(evt){
                     self.parentWidget.back();
                 });
@@ -72,6 +76,14 @@ require.def("bobtv/appui/components/simplecarouselcomponent",
             // TODO: review the above comment, could be missleading
             _onBeforeRender: function () {
                 this._carousel.setDataSource(this._dataSource);
+            },
+
+            _databound: function(evt) {
+                //
+
+                this._carousel._isFocussed = true;
+                console.log(evt);
+                this.setActiveChildWidget(this._carousel);
             }
         });
     }

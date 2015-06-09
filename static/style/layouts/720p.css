@@ -31,7 +31,7 @@
     height: 720px;
     top: 50%;
     margin: -360px auto 0 auto;
-    background-image: url(../../img/bbc_background_720.png);
+    background: url(../../img/labs.png) no-repeat 50% 50%;
 }
 
 #helloWorldLabel, #welcomeLabel {
@@ -72,9 +72,9 @@
 
 #carouselComponent > .carouselmask.vertical {
     height: 600px;
-    width: 264px
+    width: 900px
 }
 
 #carouselComponent > .description {
-    margin-bottom: 64px;
+
 }

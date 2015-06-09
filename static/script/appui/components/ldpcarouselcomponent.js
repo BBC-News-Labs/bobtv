@@ -1,4 +1,4 @@
-require.def("bobtv/appui/components/carouselcomponent",
+require.def("bobtv/appui/components/ldpcarouselcomponent",
     [
         "antie/widgets/component",
         "antie/datasource",
@@ -9,7 +9,9 @@ require.def("bobtv/appui/components/carouselcomponent",
         "antie/widgets/carousel/strips/wrappingstrip",
         "antie/widgets/carousel/navigators/wrappingnavigator",
         "antie/widgets/carousel/strips/cullingstrip",
-        "antie/widgets/carousel/strips/hidingstrip"
+        "antie/widgets/carousel/strips/hidingstrip",
+        "bobtv/appui/formatters/storyformatter",
+        "bobtv/appui/datasources/ldpfeed"
     ],
     function (
         Component,
@@ -21,7 +23,9 @@ require.def("bobtv/appui/components/carouselcomponent",
         WrappingStrip,
         WrappingNavigator,
         CullingStrip,
-        HidingStrip
+        HidingStrip,
+        StoryFormatter,
+        LdpFeed
         ) {
         'use strict';
 
@@ -60,7 +64,27 @@ require.def("bobtv/appui/components/carouselcomponent",
             },
 
             onSelect: function (evt) {
-                this._goBack();
+                //console.log(evt.target._childWidgetOrder[0].outputElement.nextElementSibling.childNodes[0].data);
+                var title = evt.target._childWidgetOrder[0].outputElement.nextElementSibling.childNodes[0].data;
+                var config = this._getCarouselConfigStory(evt.target._childWidgetOrder[0].id, title);
+                this._createCarousel(config);
+                //this._super('carouselComponentSub');
+                
+                evt.target.parentWidget.parentWidget.parentWidget.parentWidget.getCurrentApplication().pushComponent(
+                        "maincontainer",
+                        "bobtv/appui/components/storycarouselcomponent",
+                        config
+                    );
+                this.hide();
+                //this.init();
+                //console.log(evt.);
+                //this._goBack();
+                // self.parentWidget.getCurrentApplication().pushComponent(
+                //         "maincontainer",
+                //         "sampleapp/appui/components/carouselcomponent",
+                //         self._getCarouselConfig()
+                //     );
+                
             },
 
             onDataBound: function (evt) {
@@ -79,6 +103,11 @@ require.def("bobtv/appui/components/carouselcomponent",
 
             setDescription: function (titleText) {
                 this._description.setText(titleText);
+            },
+
+            getCurrentState: function() {
+                console.log("I CALLED GET CURRENT STATE IN LDP CAROUSEL");
+                return this.getCurrentApplication().getFocussedWidget();
             },
 
             _addComponentListeners: function () {
@@ -188,7 +217,6 @@ require.def("bobtv/appui/components/carouselcomponent",
             },
 
             _goBack: function () {
-                console.log(this.parentWidget);
                 this.parentWidget.back();
             },
 
@@ -218,7 +246,27 @@ require.def("bobtv/appui/components/carouselcomponent",
 
             _removeListenersFrom: function (target, listenerMap) {
                 this._modifyListenersOn(target, listenerMap, false);
-            }
+            },
+
+            _getCarouselConfigStory: function (storyId, title) {
+                return {
+                    description: title,
+                    dataSource: new DataSource(null, new LdpFeed(), 'loadStoriesById', storyId),
+                    formatter: new StoryFormatter(),
+                    orientation: Carousel.orientations.VERTICAL,
+                    carouselId: 'verticalCullingCarousel3',
+                    animOptions: {
+                        skipAnim: false
+                    },
+                    alignment: {
+                        normalisedAlignPoint: 0.5,
+                        normalisedWidgetAlignPoint: 0.5
+                    },
+                    initialItem: 0,
+                    type: "CULLING",
+                    lengths: 264
+                };
+            },
         });
 
         return CarouselComponent;

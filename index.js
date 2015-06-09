@@ -28,21 +28,25 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs');
 var path = require('path');
+var vhost = require('vhost');
+//var ldp = require(__dirname + '/../lib/ldp');
 
 // INIT AND CONFIG LOAD
 function returnResponse(url, response)
 {
+ 
 	//Check TAL is available
 	if (!fs.existsSync('./antie/node/antieframework.js')) {
     	response.write("antieframework.js can not be found.");
-    	response.write("Please install TAL to a folder 'antie' in your application's root");
+    	response.write("Please install TAL to a folder 'antie' in your application's root1");
 	}
+
 
 	// Check TAL is available
     var AntieFramework = require('./antie/node/antieframework.js');
 
 	// Set up application ID and path to framework configuration directory
-	var application_id = "sampleapp";
+	var application_id = "bobtv";
 	var configPath = "antie/config";
 	var frameworkPath = "antie/config/framework/";
 
@@ -78,7 +82,6 @@ function returnResponse(url, response)
 	// Construct filename from this and config path
 	var device_configuration_name = device_brand + "-" + device_model;
 	var device_configuration_file_path = "/devices";
-
 	// Load in device configuration
 	try
 	{
@@ -112,7 +115,8 @@ function returnResponse(url, response)
 				response.write("baseUrl: '',");
 				response.write("paths: {");
 					response.write(application_id + ": 'static/script',");
-					response.write("antie : 'antie/static/script'");
+					response.write("antie : 'antie/static/script',");
+					response.write("bower : 'bower_components'");
 				response.write("},");
 				response.write("priority: [],");
 				response.write("callback: function() {}");
@@ -139,17 +143,17 @@ function returnResponse(url, response)
 	response.write("<script type='text/javascript'>");
 	response.write("require(");
 	response.write("[");
-			response.write("'sampleapp/appui/sampleapp'");
+			response.write("'bobtv/appui/bobtv'");
 	response.write("],");
 
-			response.write("function(SampleApp) {");
+			response.write("function(bobtv) {");
 					response.write("require.ready(function() {");
 						response.write("function onReady() {");
 							response.write("var staticLoadingScreen = document.getElementById('static-loading-screen');");
 							response.write("staticLoadingScreen.parentNode.removeChild(staticLoadingScreen);");
 						response.write("};");
 
-						response.write("new SampleApp(");
+						response.write("var KarlTest = new bobtv(");
 								response.write("document.getElementById('app'),");
 								response.write("'static/style/',");
 								response.write("'static/img/',");
@@ -165,6 +169,7 @@ function returnResponse(url, response)
 
 http.createServer(function (req, res) {
 	var path = url.parse(req.url).pathname;
+	res.setHeader("Access-Control-Allow-Origin", "*");
 	switch (path)
 	{
 		case '/':
@@ -186,7 +191,8 @@ http.createServer(function (req, res) {
             }
             else if (/\.(js)$/.test(path))
             {
-                res.writeHead(200, {'Content-Type': 'text/js'});
+                //res.writeHead(200, {'Content-Type': 'text/js'});
+                res.writeHead(200, {'Content-Type': 'text/javascript'});
                 res.write(fs.readFileSync(__dirname + path, 'utf8'));
             }
             else{

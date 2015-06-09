@@ -22,7 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def("bobtv/appui/components/simplevideocomponent",
+require.def("bobtv/appui/components/videoplayercomponent",
     [
         "antie/widgets/component",
         "antie/widgets/button",
@@ -39,7 +39,7 @@ require.def("bobtv/appui/components/simplevideocomponent",
                 var self = this;
 
                 // It is important to call the constructor of the superclass
-                this._super("simplevideocomponent");
+                this._super("videoplayercomponent");
 
                 // Get a reference to the current application and device objects
                 this._application = this.getCurrentApplication();
@@ -74,10 +74,14 @@ require.def("bobtv/appui/components/simplevideocomponent",
                     if (self._device.getPlayerEmbedMode() === Media.EMBED_MODE_BACKGROUND) {
                         self.showBackground();
                     }
-
+                    console.log('in back and the parent widget is ... ', self);
+                    console.log('and hte root widget is... ', self._application);
                     // Make sure we destroy the player before exiting
+                    //var component = self._application.getRootComponent();
+                    //console.log(component);
                     self.destroyPlayer();
                     self.parentWidget.back();
+                    //self.parentWidget.show("bobtv/appui/components/storycarouselcomponent");
                 });
 
                 // Append the player control buttons to the component
@@ -90,8 +94,9 @@ require.def("bobtv/appui/components/simplevideocomponent",
             },
 
             _onBeforeRender: function (ev) {
+                var args = JSON.parse(ev.args);
                 // Create a video player
-                var videoUrl = "static/mp4/spinning-logo.mp4";
+                var videoUrl = unescape(args.src);
                 var videoType = "video/mp4";
 
                 // Create the device's video object, set the media sources and start loading the media

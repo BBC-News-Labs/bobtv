@@ -22,7 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def("sampleapp/appui/components/horizontalprogresscomponent",
+require.def("bobtv/appui/components/horizontalprogresscomponent",
     [
         "antie/widgets/component",
         "antie/widgets/horizontalprogress",
@@ -56,7 +56,7 @@ require.def("sampleapp/appui/components/horizontalprogresscomponent",
                 });
 
                 this.addEventListener("select", function(evt) {
-                    self.parentWidget.back();
+//                    self.parentWidget.back();
                 });
             },
 

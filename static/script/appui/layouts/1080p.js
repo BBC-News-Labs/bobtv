@@ -22,7 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def('sampleapp/appui/layouts/1080p',
+require.def('bobtv/appui/layouts/1080p',
     {
         classes: [
             "layout1080p"
