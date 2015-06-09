@@ -1,0 +1,24 @@
+{
+  "name": "bobtv",
+  "main": "index.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/fmtvp/talexample",
+  "authors": [
+    "robseriousgit <robseriousgit@gmail.com>"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "q": "1.0.1",
+    "jquery": "~2.1.4"
+  }
+}
