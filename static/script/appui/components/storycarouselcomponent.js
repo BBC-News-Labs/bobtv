@@ -54,6 +54,9 @@ require.def("bobtv/appui/components/storycarouselcomponent",
                 this._setCarouselAlignPoints(evt);
                 this._saveCarouselLengths(evt);
                 this._startCarouselDataBinding(evt);
+                if (evt.args.fromBack === true) {
+                    self._carousel.focus();
+                }
             },
 
             onAfterHide: function (evt) {
@@ -77,7 +80,7 @@ require.def("bobtv/appui/components/storycarouselcomponent",
                         "bobtv/appui/components/videoplayercomponent",
                         evt.target.getDataItem()
                     );
-                this.hide();
+                
                 
             },
 

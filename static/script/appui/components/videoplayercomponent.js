@@ -103,6 +103,8 @@ require.def("bobtv/appui/components/videoplayercomponent",
                 var player = this.createVideoPlayer();
                 player.setSources([new VideoSource(videoUrl, videoType)]);
                 player.load();
+                console.log('focussing');
+                player.focus();
             },
             getPlayer : function() {
                 return this._player;

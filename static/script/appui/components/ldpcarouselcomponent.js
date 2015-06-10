@@ -75,7 +75,7 @@ require.def("bobtv/appui/components/ldpcarouselcomponent",
                         "bobtv/appui/components/storycarouselcomponent",
                         config
                     );
-                this.hide();
+                //this.hide();
                 //this.init();
                 //console.log(evt.);
                 //this._goBack();
